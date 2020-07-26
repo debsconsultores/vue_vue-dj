@@ -1,5 +1,17 @@
 <template>
-    <b-container fluid class="p-4 bg-dark">
+    <b-container fluid class="p-4 bg-dark text-white">
+        <b-row>
+            <b-col md="6">
+                <b-form-input v-model="buscar" placeholder="Ingrese Patrón a Buscar"
+                @keypress.enter="buscarImagenes"
+                ></b-form-input>
+            </b-col>
+            <b-col md="1">
+                <b-button variant="danger" @click="buscarImagenes">
+                    Buscar
+                </b-button>
+            </b-col>
+        </b-row>
         <b-row>
             <b-col 
             v-for="img in pixaImagenes" :key="img.id" md="2"
