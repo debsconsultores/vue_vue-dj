@@ -1,6 +1,8 @@
 <template>
     <div>
-        <b-img :id="img.id" :src="img.previewURL" thumbnail fluid></b-img>
+        <b-img :id="img.id" :src="img.previewURL" thumbnail fluid rounded
+        v-b-popover.hover.top="img.tags" title="Curso Vue + Django: Etiqueta"
+        ></b-img>
     </div>
 </template>
 
