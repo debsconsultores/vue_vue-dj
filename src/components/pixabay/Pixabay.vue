@@ -1,8 +1,10 @@
 <template>
-    <b-container>
+    <b-container fluid class="p-4 bg-dark">
         <b-row>
-            <b-col>
-
+            <b-col 
+            v-for="img in pixaImagenes" :key="img.id" md="2"
+            class="py-2 text-center">
+                <b-img :id="img.id" :src="img.previewURL" thumbnail fluid></b-img>
             </b-col>
         </b-row>
     </b-container>
