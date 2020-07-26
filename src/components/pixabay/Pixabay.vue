@@ -1,7 +1,7 @@
 <template>
     <b-container fluid class="p-4 bg-dark text-white">
         <b-row>
-            <b-col md="6">
+            <!-- <b-col md="6">
                 <b-form-input v-model="buscar" placeholder="Ingrese Patrón a Buscar"
                 @keypress.enter="buscarImagenes"
                 ></b-form-input>
@@ -10,6 +10,9 @@
                 <b-button variant="danger" @click="buscarImagenes">
                     Buscar
                 </b-button>
+            </b-col> -->
+            <b-col>
+                <Buscador @buscarDesdeHijo="buscarImagenes" />
             </b-col>
         </b-row>
         <b-row>
@@ -26,11 +29,13 @@
 <script>
 import ServicioAPI from "./ServicioAPI";
 import Imagen from "./Imagen";
+import Buscador from "./Buscador";
 
 export default {
     name:"Pixabay",
     components:{
         Imagen,
+        Buscador,
     },
     data(){
         return{
@@ -39,7 +44,8 @@ export default {
         }
     },
     methods:{
-        async buscarImagenes(){
+        async buscarImagenes(buscar=""){
+            this.buscar = buscar;
             const consulta = await ServicioAPI.getImagenes(this.buscar);
             this.pixaImagenes = consulta.hits;
             console.log(consulta);
