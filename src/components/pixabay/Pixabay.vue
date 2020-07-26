@@ -12,7 +12,7 @@
                 </b-button>
             </b-col> -->
             <b-col>
-                <Buscador @buscarDesdeHijo="buscarImagenes" />
+                <Buscador @buscarDesdeHijo="realizaBusqueda" />
             </b-col>
         </b-row>
         <b-row>
@@ -21,6 +21,19 @@
             class="py-2 text-center">
                 <!-- <b-img :id="img.id" :src="img.previewURL" thumbnail fluid></b-img> -->
                 <Imagen :img="img"/>
+            </b-col>
+        </b-row>
+        <b-row align-h="center">
+            <b-col md="12">
+                <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+                aria-controls="Imagen"
+                @input="buscarImagenes"
+                v-if="rows>0"
+                ></b-pagination>
+                <b-alert variant="danger" show v-else>Busqueda de {{buscar}} no devolvió nada</b-alert>
             </b-col>
         </b-row>
     </b-container>
@@ -40,15 +53,26 @@ export default {
     data(){
         return{
             pixaImagenes:[],
-            buscar:""
+            buscar:"",
+            currentPage:1,
+            rows:1,
+            perPage:20
         }
     },
     methods:{
-        async buscarImagenes(buscar=""){
-            this.buscar = buscar;
-            const consulta = await ServicioAPI.getImagenes(this.buscar);
+        async buscarImagenes(){
+            // this.buscar = buscar;
+            const consulta = await ServicioAPI.getImagenes(this.buscar,this.currentPage);
             this.pixaImagenes = consulta.hits;
-            console.log(consulta);
+            // console.log(consulta);
+            this.rows = consulta.total / this.perPage;
+            console.log(this.currentPage)
+        },
+        realizaBusqueda(buscar=""){
+            this.buscar = buscar;
+            this.buscarImagenes();
+            this.currentPage = 1;
+
         }
     },
     mounted(){
