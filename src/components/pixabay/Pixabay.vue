@@ -16,7 +16,8 @@
             <b-col 
             v-for="img in pixaImagenes" :key="img.id" md="2"
             class="py-2 text-center">
-                <b-img :id="img.id" :src="img.previewURL" thumbnail fluid></b-img>
+                <!-- <b-img :id="img.id" :src="img.previewURL" thumbnail fluid></b-img> -->
+                <Imagen :img="img"/>
             </b-col>
         </b-row>
     </b-container>
@@ -24,9 +25,13 @@
 
 <script>
 import ServicioAPI from "./ServicioAPI";
+import Imagen from "./Imagen";
 
 export default {
     name:"Pixabay",
+    components:{
+        Imagen,
+    },
     data(){
         return{
             pixaImagenes:[],

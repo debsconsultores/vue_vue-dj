@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Home v-if="false"></Home>
-    <Pixabay></Pixabay>
+    <Pixabay />
   </div>
 </template>
 
