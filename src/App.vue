@@ -1,6 +1,16 @@
 <template>
   <v-app>
-    <v-navigation-drawer permanent expand-on-hover>
+    <v-system-bar>
+      <v-app-bar-nav-icon @click.stop="mostrarMenu=!mostrarMenu">
+      </v-app-bar-nav-icon>
+    </v-system-bar>
+    <v-navigation-drawer 
+    v-model="mostrarMenu"
+    expand-on-hover
+    temporary
+    absolute
+    :mini-variant="miniVariant"
+    >
       <v-list>
         <v-list-item class="px-2">
           <v-list-item-avatar>
@@ -48,7 +58,9 @@ export default {
       menu:[
         {ruta:"/",nombre:"Inicio",icono:"mdi-folder"},
         {ruta:"/pixa",nombre:"Imágenes",icono:"mdi-folder"}
-      ]
+      ],
+      mostrarMenu:false,
+      miniVariant:true
     }
   }
 }
