@@ -56,8 +56,9 @@ export default {
   data(){
     return {
       menu:[
-        {ruta:"/",nombre:"Inicio",icono:"mdi-folder"},
-        {ruta:"/pixa",nombre:"Imágenes",icono:"mdi-folder"}
+        {ruta:"/",nombre:"Inicio",icono:"home"},
+        {ruta:"/pixa",nombre:"Imágenes",icono:"image_search"},
+        {ruta:"/docs",nombre:"Documentos",icono:"devices_other"},
       ],
       mostrarMenu:false,
       miniVariant:true

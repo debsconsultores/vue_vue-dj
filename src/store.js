@@ -18,7 +18,7 @@ export default new Vuex.Store({
 
     mutations: {
         async setItems (state) {
-            let item = await api.getAll();
+            let items = await api.getAll();
             state.items = items;
         },
         async insetarDoc(state,payload){

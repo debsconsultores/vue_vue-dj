@@ -9,8 +9,8 @@ const credenciales = {"username":USUARIO,"password":PASSWORD}
 const getToken = async () => {
     const r = await fetch(
         TOKEN_URL, {
-            method="POST",
-            body=JSON.stringify(credenciales),
+            method:"POST",
+            body:JSON.stringify(credenciales),
             mode:"cors",
             headers:{
                 'Content-Type':'application/json'
@@ -26,7 +26,7 @@ export default {
         const token = await getToken();
 
         const res = await fetch(DOCS_URL,{
-            method="GET",
+            method:"GET",
             headers:{
                 'Content-Type': 'application/json',
                 "Authorization": "Bearer "+token.access
@@ -41,7 +41,7 @@ export default {
         const token = await getToken();
 
         const res = await fetch(DOCS_URL,{
-            method="POST",
+            method:"POST",
             body: JSON.stringify(doc),
             headers:{
                 'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default {
         let url = DOCS_URL + doc.id + "/";
 
         const res = await fetch(url,{
-            method="PUT",
+            method:"PUT",
             body: JSON.stringify(doc),
             headers:{
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export default {
         return item;
     },
 
-    deleteForId: (id) => {
+    deleteForId: async (id) => {
         const token = await getToken();
         let url = DOCS_URL + id + "/";
 
