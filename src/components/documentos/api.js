@@ -76,5 +76,19 @@ export default {
 
         const item = await res.json();
         return item;
+    },
+
+    deleteForId: (id) => {
+        const token = await getToken();
+        let url = DOCS_URL + id + "/";
+
+        fetch(url,{
+            method:"DELETE",
+            headers:{
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer "+token.access
+            }
+        })
+        .catch(error => console.error("Error:",error));
     }
 }
