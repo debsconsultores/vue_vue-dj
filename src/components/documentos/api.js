@@ -20,3 +20,40 @@ const getToken = async () => {
     const token = await r.json();
     return token;
 }
+
+export default {
+    getAll: async () => {
+        const token = await getToken();
+
+        const res = await fetch(DOCS_URL,{
+            method="GET",
+            headers:{
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer "+token.access
+            }
+        });
+        const items = await res.json();
+        console.log(items);
+        return  items.results;
+    },
+
+    insert: async (doc)=>{
+        const token = await getToken();
+
+        const res = await fetch(DOCS_URL,{
+            method="POST",
+            body: JSON.stringify(doc),
+            headers:{
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer "+token.access
+            }
+        });
+
+        if(!res.ok){
+            return res.statusText;
+        }
+
+        const item = await res.json();
+        return item;
+    }
+}
