@@ -55,5 +55,26 @@ export default {
 
         const item = await res.json();
         return item;
+    },
+
+    update : async (doc) =>{
+        const token = await getToken();
+        let url = DOCS_URL + doc.id + "/";
+
+        const res = await fetch(url,{
+            method="PUT",
+            body: JSON.stringify(doc),
+            headers:{
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer "+token.access
+            }
+        });
+
+        if(!res.ok){
+            return res.statusText;
+        }
+
+        const item = await res.json();
+        return item;
     }
 }
