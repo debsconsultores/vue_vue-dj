@@ -7,7 +7,11 @@ import api from "./components/documentos/api";
 
 export default new Vuex.Store({
     state:{
-        items: []
+        items: [],
+        mensaje:{
+            mostrar:false,
+            texto:""
+        }
     },
 
     getters:{
