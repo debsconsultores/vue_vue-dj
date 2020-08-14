@@ -11,6 +11,10 @@ export default new Vuex.Store({
         mensaje:{
             mostrar:false,
             texto:""
+        },
+        loading:{
+            titulo:"Cargando...",
+            estado:true
         }
     },
 
@@ -22,8 +26,10 @@ export default new Vuex.Store({
 
     mutations: {
         async setItems (state) {
+            this.commit("mostrarLoading","Cargando Datos...")
             let items = await api.getAll();
             state.items = items;
+            this.commit("ocultarLoading","Cargando Datos...")
         },
         async insetarDoc(state,payload){
             let r  = await api.insert(payload);
@@ -39,6 +45,15 @@ export default new Vuex.Store({
         async borrarDoc(state,payload){
             state = api.deleteForId(payload.id);
             this.state.items = await api.getAll();
+        },
+        mostrarLoading(state,payload){
+            state.loading.estado = true;
+            if(payload!==undefined){
+                this.state.loading.titulo=payload;
+            }
+        },
+        ocultarLoading(state){
+            state.loading.estado = false;
         }
     }
 
