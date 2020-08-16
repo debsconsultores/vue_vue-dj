@@ -34,11 +34,13 @@ export default new Vuex.Store({
         async insetarDoc(state,payload){
             let r  = await api.insert(payload);
             state = r;
+            this.commit("mensaje","Registro Insertado Satisfactoriamente");
             let items = await api.getAll();
             this.state.items = items;
         },
         async actualizarDoc(state,payload){
             let r = await api.update(payload);
+            this.commit("mensaje","Registro Actualizado Satisfactoriamente");
             state = r;
             this.state.items = await api.getAll();
         },
@@ -54,6 +56,10 @@ export default new Vuex.Store({
         },
         ocultarLoading(state){
             state.loading.estado = false;
+        },
+        mensaje(state,payload){
+            this.state.mensaje.mostrar= true;
+            this.state.mensaje.texto = payload;
         }
     }
 
