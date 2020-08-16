@@ -4,9 +4,7 @@
             <v-row>
                 <v-col>
                     <Mensaje />
-                    <div v-for="item in allItems" :key="item.id">
-                        <Item :item="item" :items="allItems" />
-                    </div>
+                    <Docs />
                     <v-progress-linear 
                     :active="loading.estado"
                     color="deep-purple accent-4"
@@ -23,13 +21,13 @@
 
 <script>
 import Mensaje from "./Mensaje"
-import Item from "./Item"
+import Docs from "./Docs"
 
 export default {
     name:"Documentos",
     components:{
         Mensaje,
-        Item,
+        Docs,
     },
     data: () => {
         return {
