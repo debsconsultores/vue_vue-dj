@@ -38,6 +38,7 @@ export default {
             try{
                 this.$store.commit("mostrarLoading","Cargando Item");
                 this.$store.commit("borrarDoc",{"id":id});
+                this.$store.commit("setItems");
             }catch(error){
                 console.error(error);
             }finally{
