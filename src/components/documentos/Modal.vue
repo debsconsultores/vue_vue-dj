@@ -115,7 +115,7 @@ export default {
                 this.$store.commit("ocultarLoading");
             }
         },
-        update(){
+        update(doc){
             try{
                 this.$store.commit("mostrarLoading","Insertando");
                 this.$store.commit("actualizarDoc",doc);
@@ -140,6 +140,7 @@ export default {
             }else{
                 this.update(doc)
             }
+            this.hide();
         }
     }
 }
