@@ -7,23 +7,32 @@ const credenciales = {"username":USUARIO,"password":PASSWORD}
 
 
 const getToken = async () => {
-    const r = await fetch(
-        TOKEN_URL, {
-            method:"POST",
-            body:JSON.stringify(credenciales),
-            mode:"cors",
-            headers:{
-                'Content-Type':'application/json'
+    try{
+        const r = await fetch(
+            TOKEN_URL, {
+                method:"POST",
+                body:JSON.stringify(credenciales),
+                mode:"cors",
+                headers:{
+                    'Content-Type':'application/json'
+                }
             }
-        }
-    )
-    const token = await r.json();
-    return token;
+        )
+        const token = await r.json();
+        return token;
+    }catch(error){
+        console.warn(error.message)
+        return error.message;
+    }
 }
 
 export default {
     getAll: async () => {
         const token = await getToken();
+        
+        if(typeof(token)==="string"){
+            return token;
+        }
 
         const res = await fetch(DOCS_URL,{
             method:"GET",
@@ -40,6 +49,10 @@ export default {
     insert: async (doc)=>{
         const token = await getToken();
 
+        if(typeof(token)==="string"){
+            return token;
+        }
+
         const res = await fetch(DOCS_URL,{
             method:"POST",
             body: JSON.stringify(doc),
@@ -49,8 +62,13 @@ export default {
             }
         });
 
+        console.log(res);
+
         if(!res.ok){
+            // let error = await res.text();
+            // console.log(error);
             return res.statusText;
+            // return error;
         }
 
         const item = await res.json();
