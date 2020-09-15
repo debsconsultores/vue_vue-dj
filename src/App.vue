@@ -59,6 +59,7 @@ export default {
         {ruta:"/",nombre:"Inicio",icono:"home"},
         {ruta:"/pixa",nombre:"Imágenes",icono:"image_search"},
         {ruta:"/docs",nombre:"Documentos",icono:"devices_other"},
+        {ruta:"/siscmpfc",nombre:"SysCmpFc",icono:"storefront"},
       ],
       mostrarMenu:false,
       miniVariant:true

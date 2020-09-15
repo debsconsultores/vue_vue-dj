@@ -23,6 +23,11 @@ const routes = [
         path:"/docs",
         name:"docuemtnos",
         component: Documentos
+    },
+    {
+        path:"/siscmpfc",
+        name:"siscmpfc",
+        component: () => import('./components/siscmpfc/Principal')
     }
 ]
 
