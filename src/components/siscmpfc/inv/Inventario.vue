@@ -32,7 +32,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <p v-if="opt==1">Categorí­a</p>
+          <Categoria v-if="opt==1" />
           <p v-if="opt==2">Sub Categorí­a</p>
           <p v-if="opt==3">Productos</p>
         </v-col>
@@ -41,10 +41,12 @@
 </template>
 
 <script>
+import Categoria from "./Categoria"
 
 export default {
   name: "Inventario",
   components: {
+      Categoria
   },
   data() {
     return {
