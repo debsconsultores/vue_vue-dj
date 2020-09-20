@@ -55,6 +55,10 @@
                 </v-dialog>
               </v-toolbar>
             </template>
+            <template v-slot:item.actions="{ item }">
+                <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+                <v-icon color="danger" small @click="deleteItem(item)">mdi-delete</v-icon>
+            </template>
             <template v-slot:no-data>
               <v-btn color="primary" @click="iniciar">Reiniciar</v-btn>
             </template>
@@ -84,6 +88,7 @@ export default {
           sortable: true,
           value: "descripcion",
         },
+        {text:'Acciones',value:'actions',sortable:false}
       ],
       dialog:false,
       editedIdex:-1,
@@ -101,6 +106,11 @@ export default {
   computed:{
       formTitle(){
           return (this.editedIdex === -1 ? "Nueva": "Editar") + " Categoría"
+      }
+  },
+  watch:{
+      dialog(val){
+          val || this.close()
       }
   },
   methods: {
@@ -122,6 +132,11 @@ export default {
             this.editedIndex = -1;
         });
     },
+    editItem(item){
+        this.editedIdex = this.items.indexOf(item)
+        this.editedItem = Object.assign({},item)
+        this.dialog = true
+    },
     async save(){
         const obj = this.editedItem
         try {
@@ -133,6 +148,13 @@ export default {
             alert(error)
         } finally{
             this.loading = false
+        }
+    },
+    async deleteItem(item){
+        if(confirm('¿Borrar Categoría?'))
+        {
+            await this.api.delCategoria(item.id)
+            this.iniciar()
         }
     }
   },
