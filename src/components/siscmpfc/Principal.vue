@@ -8,7 +8,7 @@
             <v-tab>Compra</v-tab>
             <v-tab>Facturación</v-tab>
 
-            <v-tab-item>Detalle Módulo Inventario</v-tab-item>
+            <v-tab-item> <Inventario /></v-tab-item>
             <v-tab-item>Detalle Módulo Compras</v-tab-item>
             <v-tab-item>Detalle Módulo Facturación</v-tab-item>
         </v-tabs>
@@ -16,10 +16,12 @@
 </template>
 
 <script>
+import Inventario from "./inv/Inventario"
+
 export default {
     name:"Principal",
     components:{
-
+        Inventario
     }
     
 }
