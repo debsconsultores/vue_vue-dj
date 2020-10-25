@@ -159,7 +159,8 @@ export default {
 
         this.subcategorias = await this.api.getSubCategorias()
       } catch (error) {
-        alert(error);
+        this.$swal("Error",error.toString())
+        // alert(error)
       } finally {
         this.loading = false;
       }
@@ -211,11 +212,30 @@ export default {
         }
     },
     async deleteItem(item){
-        if(confirm('¿Borrar Sub Categoría?'))
-        {
+        // if(confirm('¿Borrar Sub Categoría?'))
+        // {
+        //     await this.api.delProducto(item.id)
+        //     this.iniciar()
+        // }
+        this.$swal({
+          title: '¿Está Seguro?',
+          html: `Borrar Producto <br> <b>${item.descripcion} </b>`,
+          type: 'warning',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Si, Borrarlo!',
+          cancelButtonText: 'No, Mantenerlo!',
+          showCloseButton: true,
+          showLoaderOnConfirm: true
+        }).then( async (result) => {
+          if(result.value){
             await this.api.delProducto(item.id)
             this.iniciar()
-        }
+            this.$swal("Borrado","Se borró satisfactoriamente el producto", "success")
+          } else {
+            this.$swal("Cancelado","Producto no fue borrado", "info")
+          }
+        })
     }
   },
   created() {
