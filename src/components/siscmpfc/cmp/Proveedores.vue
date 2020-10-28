@@ -28,6 +28,7 @@
                       <v-icon>add_box</v-icon>
                     </v-btn>
                   </template>
+                  <v-form ref="form" v-model="formValido" lazy-validation>
                   <v-card>
                     <v-card-title>
                       <span class="headline">{{ formTitle }}</span>
@@ -40,7 +41,7 @@
                             <v-text-field v-model="editedItem.id" label="ID" disabled></v-text-field>
                           </v-col>
                           <v-col cols="10" sm="10" md="10">
-                            <v-text-field v-model="editedItem.nombre" label="Nombre"></v-text-field>
+                            <v-text-field v-model="editedItem.nombre" :rules="textRules" label="Nombre"></v-text-field>
                           </v-col>
                         </v-row>
                         <v-row>
@@ -50,6 +51,7 @@
                             <v-col>
                               <v-text-field
                                 v-model="editedItem.email"
+                                :rules="emailRules"
                                 label="E-Mail"
                               ></v-text-field>
                             </v-col>
@@ -60,9 +62,10 @@
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-                      <v-btn color="pink accent-3" text @click="save">Guardar</v-btn>
+                      <v-btn color="pink accent-3" :disabled="!formValido" text @click="save">Guardar</v-btn>
                     </v-card-actions>
                   </v-card>
+                  </v-form>
                 </v-dialog>
               </v-toolbar>
             </template>
@@ -121,8 +124,15 @@ export default {
           nombre:"",
           telefono:"",
           email:""
-      }
-
+      },
+      emailRules: [
+            v => !!v || "E-mail is requerido",
+            v => /.+@.+/.test(v) || "E-mail debe ser válido"
+        ],
+        textRules:[
+            v => !!v || "Requerido"
+        ],
+        formValido:true
     };
   },
   computed:{
@@ -165,6 +175,15 @@ export default {
     },
     async save(){
         const obj = this.editedItem
+
+        if(obj.nombre.length<=3){
+            this.$swal({
+              title: 'Error!',
+              text: 'Nombre Proveedor debe tener al menos 4 caracteres',
+              icon: 'error'
+            })
+            return false;
+        }
 
         try {
             this.loading = true
