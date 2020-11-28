@@ -4,7 +4,17 @@
             <v-container>
                 <v-row>
                     <v-col>
-                        <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field>
+                        <!-- <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field> -->
+                        <v-row>
+                            <v-col cols="12" md="8">
+                                <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="4">
+                                <v-btn color="red" icon @click="buscar" dense>
+                                    <v-icon>search</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                     </v-col>
                     <v-col>
                         <v-dialog
@@ -115,11 +125,11 @@ export default {
     name:"Comprar"    ,
     data(){
         return{
-            hoy:    new Date().getFullYear() +
-                    "-" +
-                    +(new Date().getMonth() +1) +
-                    "-" +
-                    new Date().getDate(),
+            // hoy:    new Date().getFullYear() +
+            //         "-" +
+            //         +(new Date().getMonth() +1) +
+            //         "-" +
+            //         new Date().getDate(),
             loading:false,
             formValido:true,
             dialogFecha: false,
@@ -154,12 +164,7 @@ export default {
                     id: -1,
                     nombre: ""
                 },
-                fecha:
-                    new Date().getFullYear() +
-                    "-" +
-                    +(new Date().getMonth() +1) +
-                    "-" +
-                    new Date().getDate()
+                fecha: ""
             },
             editedDetalle: {
                 id: -1,
@@ -175,6 +180,12 @@ export default {
             apiInv: new ApiInv()
         }
     },
+    computed:{
+        hoy(){
+            return new Date().toISOString().substr(0, 10)
+        }
+
+    },
     methods: {
         async iniciar() {
             this.loading = true;
@@ -183,6 +194,8 @@ export default {
             this.proveedores = r;
             this.productos = await this.apiInv.getProductos();
             console.log(this.productos);
+
+            this.editedEnc.fecha = this.hoy
             this.loading = false;
         },
         async save(){
@@ -194,17 +207,20 @@ export default {
             const det = this.editedDetalle
 
             if(enc.proveedor.id==-1){
-                alert("Proveedor Requerido")
+                // alert("Proveedor Requerido")
+                this.$swal("Proveedor Requerido","","error")
                 return false
             }
 
             if(det.producto==-1){
-                alert("Producto Requerido")
+                // alert("Producto Requerido")
+                this.$swal("Producto Requerido","","error")
                 return false
             }
 
             if(det.cantidad<=0){
-                alert("Cantidad Errónea - No se aceptan CERO o NEGATIVOS")
+                // alert("Cantidad Errónea - No se aceptan CERO o NEGATIVOS")
+                this.$swal("Cantidad Errónea"," No se aceptan CERO o NEGATIVOS","error")
                 return false
             }
 
@@ -238,12 +254,12 @@ export default {
             this.editedEnc = e
             this.editedDetalle = []
 
-            const d = await this.api.guardarDetalle(detalle)
-            console.log(d)
+            await this.api.guardarDetalle(detalle)
+            // console.log(d)
 
-            const p = await this.api.getProveedores(e.proveedor)
-            console.log(p)
-            this.editedEnc["proveedor"] = p
+            // const p = await this.api.getProveedores(e.proveedor)
+            // console.log(p)
+            // this.editedEnc["proveedor"] = p
             this.updateDetalle()
 
         },
@@ -251,8 +267,46 @@ export default {
             this.loading = true
             const d = await this.api.get(this.editedEnc.id)
             console.log(d)
+            
+            this.editedEnc = d
+            const p = await this.api.getProveedores(d.proveedor)
+            console.log(p)
+            this.editedEnc["proveedor"] = p
+
             this.detalle = d.detalle
             this.loading = false
+        },
+        async buscar(){
+            const {value:idEnc} = await this.$swal.fire({
+                title:"Digite Número de Compra",
+                input: "text",
+                allowOutsideClick:false,
+                showCancelButton:true,
+                inputValidator: (value) => {
+                    if(!value) {
+                        return "Debe Digitar Id de Compra"
+                    }
+                }
+            })
+
+            if(idEnc){
+                this.editedEnc.id = idEnc
+                await this.updateDetalle()
+
+                if(this.editedEnc.id === undefined){
+                    this.$swal("Compra no Encontrada",idEnc,"error")
+                    this.editedEnc = {
+                        id: -1,
+                        proveedor: {
+                            id: -1,
+                            nombre: ""
+                        },
+                        fecha: this.hoy
+                    }
+                }
+            }else{
+              this.$swal("Bùsqueda Cancelada","","warning")
+            }
         }
     },
     created(){
