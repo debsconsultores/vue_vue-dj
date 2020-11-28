@@ -2,13 +2,67 @@
     <v-app>
         <v-container>
             <v-row>
-
+                <v-col>
+                    <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field>
+                </v-col>
+                <v-col>
+                    Fecha de Compra
+                </v-col>
+                <v-col>
+                    <v-autocomplete
+                    v-model="editedEnc.proveedor"
+                    :items="proveedores"
+                    label="Proveedor"
+                    item-text="nombre"
+                    item-value="id"
+                    return-object
+                    prepend-icon="mdi-city"
+                    ></v-autocomplete>
+                </v-col>
             </v-row>
             <v-row>
-
+                <v-col>
+                    <v-autocomplete
+                        v-model="editedDetalle.producto"
+                        :items="productos"
+                        label="Producto"
+                        item-text="descripcion"
+                        item-value="id"
+                        return-object
+                        prepend-icon="mdi-city"
+                    ></v-autocomplete>
+                </v-col>
+                <v-col>
+                    <v-text-field v-model="editedDetalle.cantidad" append-icon="mdi-magnify" label="Cantidad"></v-text-field>
+                </v-col>
+                <v-col>
+                    <v-text-field v-model="editedDetalle.precio" append-icon="mdi-magnify" label="Precio"></v-text-field>
+                </v-col>
             </v-row>
             <v-row>
-
+                <v-data-table
+                    :headers="headers"
+                    item-key="name"
+                    class="elevation-1"
+                    dense
+                    :loading="loading"
+                    loading-text="Cargando..."
+                    :items="detalle"
+                >
+                    <template slot="headers" slot-scope="props">
+                    <tr>
+                        <th
+                        v-for="header in props.headers"
+                        :key="header.text"
+                        :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                        @click="changeSort(header.value)"
+                        >
+                        <v-icon small>arrow_upward</v-icon>
+                        {{ header.text }}
+                        </th>
+                    </tr>
+                    </template>
+                </v-data-table>
             </v-row>
         </v-container>
     </v-app>
