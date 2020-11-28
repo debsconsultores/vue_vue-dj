@@ -1,94 +1,107 @@
 <template>
     <v-app>
-        <v-container>
-            <v-row>
-                <v-col>
-                    <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field>
-                </v-col>
-                <v-col>
-                    <v-dialog
-                        ref="dialog"
-                        v-model="dialogFecha"
-                        :return-value.sync="editedEnc.fecha"
-                        persistent
-                        width="290px"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                            v-model="editedEnc.fecha"
-                            label="Fecha Compra"
-                            prepend-icon="event"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                        ></v-text-field>
-                        </template>
-                        <v-date-picker v-model="editedEnc.fecha" scrollable color="success" locale="es">
-                        <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="dialogFecha = false">Cancel</v-btn>
-                        <v-btn text color="primary" @click="$refs.dialog.save(editedEnc.fecha)">OK</v-btn>
-                        </v-date-picker>
-                    </v-dialog>
-                </v-col>
-                <v-col>
-                    <v-autocomplete
-                    v-model="editedEnc.proveedor"
-                    :items="proveedores"
-                    label="Proveedor"
-                    item-text="nombre"
-                    item-value="id"
-                    return-object
-                    prepend-icon="mdi-city"
-                    ></v-autocomplete>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-autocomplete
-                        v-model="editedDetalle.producto"
-                        :items="productos"
-                        label="Producto"
-                        item-text="descripcion"
+        <v-form ref="form" v-model="formValido" lazy-validation>
+            <v-container>
+                <v-row>
+                    <v-col>
+                        <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field>
+                    </v-col>
+                    <v-col>
+                        <v-dialog
+                            ref="dialog"
+                            v-model="dialogFecha"
+                            :return-value.sync="editedEnc.fecha"
+                            persistent
+                            width="290px"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                                v-model="editedEnc.fecha"
+                                label="Fecha Compra"
+                                prepend-icon="event"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                            ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="editedEnc.fecha" scrollable color="success" locale="es">
+                            <v-spacer></v-spacer>
+                            <v-btn text color="primary" @click="dialogFecha = false">Cancel</v-btn>
+                            <v-btn text color="primary" @click="$refs.dialog.save(editedEnc.fecha)">OK</v-btn>
+                            </v-date-picker>
+                        </v-dialog>
+                    </v-col>
+                    <v-col>
+                        <v-autocomplete
+                        v-model="editedEnc.proveedor"
+                        :items="proveedores"
+                        label="Proveedor"
+                        item-text="nombre"
                         item-value="id"
                         return-object
                         prepend-icon="mdi-city"
-                    ></v-autocomplete>
-                </v-col>
-                <v-col>
-                    <v-text-field v-model="editedDetalle.cantidad" append-icon="mdi-magnify" label="Cantidad"></v-text-field>
-                </v-col>
-                <v-col>
-                    <v-text-field v-model="editedDetalle.precio" append-icon="mdi-magnify" label="Precio"></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-data-table
-                        :headers="headers"
-                        item-key="name"
-                        class="elevation-1"
-                        dense
-                        :loading="loading"
-                        loading-text="Cargando..."
-                        :items="detalle"
-                    >
-                        <template slot="headers" slot-scope="props">
-                        <tr>
-                            <th
-                            v-for="header in props.headers"
-                            :key="header.text"
-                            :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                            @click="changeSort(header.value)"
-                            >
-                            <v-icon small>arrow_upward</v-icon>
-                            {{ header.text }}
-                            </th>
-                        </tr>
-                        </template>
-                    </v-data-table>
-                </v-col>
-            </v-row>
-        </v-container>
+                        :rules="textRules"
+                        ></v-autocomplete>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <v-autocomplete
+                            v-model="editedDetalle.producto"
+                            :items="productos"
+                            label="Producto"
+                            item-text="descripcion"
+                            item-value="id"
+                            return-object
+                            prepend-icon="mdi-city"
+                            :rules="textRules"
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col>
+                        <v-text-field v-model="editedDetalle.cantidad" append-icon="mdi-magnify" label="Cantidad"></v-text-field>
+                    </v-col>
+                    <v-col>
+                        <v-text-field v-model="editedDetalle.precio" append-icon="mdi-magnify" label="Precio"></v-text-field>
+                    </v-col>
+                    <v-col>
+                        <v-btn color="warning" fab icon
+                        :disabled="!formValido" @click="save">
+                            <v-icon>save</v-icon>
+                        </v-btn>
+                        <v-btn color="error" icon>
+                            <v-icon>clear</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <v-data-table
+                            :headers="headers"
+                            item-key="name"
+                            class="elevation-1"
+                            dense
+                            :loading="loading"
+                            loading-text="Cargando..."
+                            :items="detalle"
+                        >
+                            <template slot="headers" slot-scope="props">
+                            <tr>
+                                <th
+                                v-for="header in props.headers"
+                                :key="header.text"
+                                :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                                @click="changeSort(header.value)"
+                                >
+                                <v-icon small>arrow_upward</v-icon>
+                                {{ header.text }}
+                                </th>
+                            </tr>
+                            </template>
+                        </v-data-table>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-form>
     </v-app>
 </template>
 
@@ -169,6 +182,75 @@ export default {
             this.productos = await this.apiInv.getProductos();
             console.log(this.productos);
             this.loading = false;
+        },
+        async save(){
+            if (!this.$refs.form.validate()) {
+                return false;
+            }
+            
+            const enc = this.editedEnc
+            const det = this.editedDetalle
+
+            if(enc.proveedor.id==-1){
+                alert("Proveedor Requerido")
+                return false
+            }
+
+            if(det.producto==-1){
+                alert("Producto Requerido")
+                return false
+            }
+
+            if(det.cantidad<=0){
+                alert("Cantidad Errónea - No se aceptan CERO o NEGATIVOS")
+                return false
+            }
+
+            if(det.precio<0){
+                alert("Precio Erróneo - No se aceptan NEGATIVOS")
+                return false
+            }
+
+            const encabezado = {
+                id : enc.id,
+                proveedor: enc.proveedor.id,
+                fecha: enc.fecha
+            }
+
+            let detalle  = {
+                id: -1,
+                cabecera: -1,
+                producto: det.producto.id,
+                cantidad: det.cantidad,
+                precio: det.precio,
+                descuento: det.descuento
+            }
+
+            const e = await this.api.guardarEncabezado(encabezado)
+            if (e.id===undefined){
+                alert(e)
+                return false
+            }
+
+            detalle.cabecera = e.id
+            this.editedEnc = e
+            this.editedDetalle = []
+
+            const d = await this.api.guardarDetalle(detalle)
+            console.log(d)
+
+            const p = await this.api.getProveedores(e.proveedor)
+            console.log(p)
+            this.editedEnc["proveedor"] = p
+            this.updateDetalle()
+
+        },
+        async updateDetalle(){
+            this.loading = true
+            const d = await this.api.get(this.editedEnc.id)
+            console.log(d)
+            this.detalle = d.detalle
+            this.loading = false
         }
     },
     created(){
