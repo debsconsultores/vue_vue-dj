@@ -40,29 +40,31 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-data-table
-                    :headers="headers"
-                    item-key="name"
-                    class="elevation-1"
-                    dense
-                    :loading="loading"
-                    loading-text="Cargando..."
-                    :items="detalle"
-                >
-                    <template slot="headers" slot-scope="props">
-                    <tr>
-                        <th
-                        v-for="header in props.headers"
-                        :key="header.text"
-                        :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                        @click="changeSort(header.value)"
-                        >
-                        <v-icon small>arrow_upward</v-icon>
-                        {{ header.text }}
-                        </th>
-                    </tr>
-                    </template>
-                </v-data-table>
+                <v-col>
+                    <v-data-table
+                        :headers="headers"
+                        item-key="name"
+                        class="elevation-1"
+                        dense
+                        :loading="loading"
+                        loading-text="Cargando..."
+                        :items="detalle"
+                    >
+                        <template slot="headers" slot-scope="props">
+                        <tr>
+                            <th
+                            v-for="header in props.headers"
+                            :key="header.text"
+                            :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                            @click="changeSort(header.value)"
+                            >
+                            <v-icon small>arrow_upward</v-icon>
+                            {{ header.text }}
+                            </th>
+                        </tr>
+                        </template>
+                    </v-data-table>
+                </v-col>
             </v-row>
         </v-container>
     </v-app>
