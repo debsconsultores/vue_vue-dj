@@ -6,7 +6,29 @@
                     <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field>
                 </v-col>
                 <v-col>
-                    Fecha de Compra
+                    <v-dialog
+                        ref="dialog"
+                        v-model="dialogFecha"
+                        :return-value.sync="editedEnc.fecha"
+                        persistent
+                        width="290px"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                            v-model="editedEnc.fecha"
+                            label="Fecha Compra"
+                            prepend-icon="event"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                        ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="editedEnc.fecha" scrollable color="success" locale="es">
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="dialogFecha = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="$refs.dialog.save(editedEnc.fecha)">OK</v-btn>
+                        </v-date-picker>
+                    </v-dialog>
                 </v-col>
                 <v-col>
                     <v-autocomplete
@@ -78,8 +100,14 @@ export default {
     name:"Comprar"    ,
     data(){
         return{
+            hoy:    new Date().getFullYear() +
+                    "-" +
+                    +(new Date().getMonth() +1) +
+                    "-" +
+                    new Date().getDate(),
             loading:false,
             formValido:true,
+            dialogFecha: false,
             search:"",
             headers: [
                 { text: "ID", value: "id" },
@@ -112,11 +140,11 @@ export default {
                     nombre: ""
                 },
                 fecha:
-                new Date().getFullYear() +
-                "-" +
-                new Date().getMonth() +
-                "-" +
-                new Date().getDate()
+                    new Date().getFullYear() +
+                    "-" +
+                    +(new Date().getMonth() +1) +
+                    "-" +
+                    new Date().getDate()
             },
             editedDetalle: {
                 id: -1,
