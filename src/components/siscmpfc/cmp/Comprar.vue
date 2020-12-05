@@ -4,6 +4,18 @@
             <v-container>
                 <v-row>
                     <v-col>
+                        <v-app-bar color="green" dense>
+                            <v-btn icon @click="iniciar">
+                                <v-icon>add_box</v-icon>
+                            </v-btn>
+                            <v-btn color="red" icon @click="buscar">
+                                <v-icon>search</v-icon>
+                            </v-btn>
+                        </v-app-bar>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
                         <!-- <v-text-field v-model="editedEnc.id" append-icon="mdi-magnify" label="No. Cmp" disabled=""></v-text-field> -->
                         <v-row>
                             <v-col cols="12" md="8">
@@ -80,8 +92,8 @@
                         :disabled="!formValido" @click="save">
                             <v-icon>save</v-icon>
                         </v-btn>
-                        <v-btn color="error" icon>
-                            <v-icon>clear</v-icon>
+                        <v-btn color="error" icon @click="editedDetalle = detalle_inicial">
+                            <v-icon>cleaning_services</v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -108,6 +120,9 @@
                                 {{ header.text }}
                                 </th>
                             </tr>
+                            </template>
+                            <template v-slot:no-data>
+                                <v-alert dense type="info">No Hay Registros</v-alert>
                             </template>
                         </v-data-table>
                     </v-col>
@@ -177,7 +192,25 @@ export default {
                 total: 0
             },
             api: new ApiCmp(),
-            apiInv: new ApiInv()
+            apiInv: new ApiInv(),
+            encabezado_inicial:{
+                id: -1,
+                proveedor: {
+                id: -1,
+                nombre: ""
+                },
+                fecha: this.hoy
+            },
+            detalle_inicial: {
+                id: -1,
+                cabecera: -1,
+                producto: -1,
+                cantidad: 0,
+                precio: 0,
+                subtotal: 0,
+                descuento: 0,
+                total: 0
+            }
         }
     },
     computed:{
@@ -194,6 +227,10 @@ export default {
             this.proveedores = r;
             this.productos = await this.apiInv.getProductos();
             console.log(this.productos);
+
+            this.editedDetalle = Object.assign({},this.detalle_inicial)
+            this.editedEnc = Object.assign({},this.encabezado_inicial)
+            this.detalle = []
 
             this.editedEnc.fecha = this.hoy
             this.loading = false;
@@ -231,7 +268,7 @@ export default {
 
             const encabezado = {
                 id : enc.id,
-                proveedor: enc.proveedor.id,
+                proveedor: enc.proveedor.id === undefined ? enc.proveedor : enc.proveedor.id,
                 fecha: enc.fecha
             }
 
