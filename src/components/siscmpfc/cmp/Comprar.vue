@@ -124,6 +124,9 @@
                             <template v-slot:no-data>
                                 <v-alert dense type="info">No Hay Registros</v-alert>
                             </template>
+                            <template v-slot:item.actions="{item}">
+                                <v-icon color="danger" small @click="borrarDetalle(item)">mdi-delete</v-icon>
+                            </template>
                         </v-data-table>
                     </v-col>
                 </v-row>
@@ -344,6 +347,31 @@ export default {
             }else{
               this.$swal("Bùsqueda Cancelada","","warning")
             }
+        },
+        async borrarDetalle(item){
+            // if(confirm("¿Borrar Detalle?")){
+                const result = await this.prompt(`${item.producto_descripcion} con id ${item.id}?`,"¿Borrar")
+                if(result.isConfirmed){
+                console.log(result)
+                await this.api.borrarDetalle(item.id)
+                this.updateDetalle()
+            }
+        },
+        async prompt(mensaje,titulo){
+            try{
+                let result = await this.$swal({
+                    title: titulo,
+                    text: mensaje,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Si',
+                    cancelButtonText: 'No',
+                    reverseButtons: true
+                });
+                return result;
+            }catch(e){
+                console.error(e);
+            }            
         }
     },
     created(){
