@@ -11,6 +11,11 @@
                             <v-btn color="red" icon @click="buscar">
                                 <v-icon>search</v-icon>
                             </v-btn>
+                            <v-spacer></v-spacer>
+                            <div v-for="(value,key) in totales" :key="key">
+                                <span class="text-capitalize red--text"> {{key}}</span>
+                                <span class="font-weight-bold"> {{value}}</span>
+                            </div>
                         </v-app-bar>
                     </v-col>
                 </v-row>
@@ -127,6 +132,18 @@
                             <template v-slot:item.actions="{item}">
                                 <v-icon color="danger" small @click="borrarDetalle(item)">mdi-delete</v-icon>
                             </template>
+                            <template slot="body.append">
+                                <tr class="red--text text--darken-4 blue lighten-4 font-weight-bold">
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ totales.cantidad }}</td>
+                                    <td></td>
+                                    <td>{{ totales.subtotal }}</td>
+                                    <td>{{ totales.decuento }}</td>
+                                    <td>{{ totales.total }}</td>
+                                    <td></td>
+                                </tr>
+                            </template>
                         </v-data-table>
                     </v-col>
                 </v-row>
@@ -219,6 +236,23 @@ export default {
     computed:{
         hoy(){
             return new Date().toISOString().substr(0, 10)
+        },
+        totales(){
+            let t = {
+                cantidad:0,
+                subtotal:0,
+                descuento:0,
+                total:0
+            }
+            if(this.detalle != undefined){
+                this.detalle.reduce((i,obj)=>{
+                    t.cantidad += obj.cantidad
+                    t.subtotal += obj.subtotal
+                    t.descuento += obj.descuento
+                    t.total += obj.total
+                },0)
+            }
+            return t
         }
 
     },
