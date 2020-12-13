@@ -123,7 +123,8 @@ export default {
         this.items = r;
       } catch (error) {
         // alert(error);
-        this.mensaje(error,"Error","error")
+        // this.mensaje(error,"Error","error")
+        this.msgError(error)
       } finally {
         this.loading = false;
       }
