@@ -71,9 +71,11 @@
 
 <script>
 import { ApiInv } from "./ApiInv";
+import mensajesMixin from "../../../mixins/mensajesMixin"
 
 export default {
   name: "Categoria",
+  mixins:[mensajesMixin],
   data() {
     return {
       items: [],
@@ -120,7 +122,8 @@ export default {
         let r = await this.api.getCategorias();
         this.items = r;
       } catch (error) {
-        alert(error);
+        // alert(error);
+        this.mensaje(error,"Error","error")
       } finally {
         this.loading = false;
       }
@@ -144,17 +147,21 @@ export default {
             await this.api.saveCategoria(obj)
             this.close()
             this.iniciar()
+            this.mensaje("Guardado Satisfactoriamente")
         } catch (error) {
-            alert(error)
+            // alert(error)
+            this.mensaje(error,"Error","error")
         } finally{
             this.loading = false
         }
     },
     async deleteItem(item){
-        if(confirm('¿Borrar Categoría?'))
+        // if(confirm('¿Borrar Categoría?'))
+        if(await this.mensajeSiNo(`¿Borrar Categoría ${item.descripcion}?`))
         {
             await this.api.delCategoria(item.id)
             this.iniciar()
+            this.mensaje("Eliminada Satisfactoriamente","Categoría")
         }
     }
   },
