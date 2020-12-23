@@ -10,7 +10,7 @@
 
             <v-tab-item> <Inventario /></v-tab-item>
             <v-tab-item> <Compras /></v-tab-item>
-            <v-tab-item>Detalle Módulo Facturación</v-tab-item>
+            <v-tab-item> <Facturas /></v-tab-item>
         </v-tabs>
     </v-card>
 </template>
@@ -18,12 +18,14 @@
 <script>
 import Inventario from "./inv/Inventario"
 import Compras from "./cmp/Compras"
+import Facturas from "./fac/Facturas"
 
 export default {
     name:"Principal",
     components:{
         Inventario,
-        Compras
+        Compras,
+        Facturas
     }
     
 }
