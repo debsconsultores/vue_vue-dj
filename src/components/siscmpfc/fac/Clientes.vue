@@ -1,5 +1,70 @@
 <template>
-    
+    <b-container>
+        <b-row>
+            <b-col sm="8">
+                <b-form-group
+                label="Filtro"
+                label-cols-sm="3"
+                label-align-sm="right"
+                label-size="sm"
+                label-for="filterInput"
+                class="mb-0">
+                    <b-input-group size="sm">
+                        <b-form-input
+                        v-model="filter"
+                        type="search"
+                        id="filterInput"
+                        placeholder="Escribe para Buscar">
+                        </b-form-input>
+                        <b-input-group-append>
+                            <b-button :disabled="!filter" @click="filter = ''">
+                                <b-icon icon="x" aria-hidden="true"></b-icon>
+                            </b-button>
+                        </b-input-group-append>                        
+                    </b-input-group>
+                </b-form-group>
+            </b-col>
+            <b-col sm="4">
+                <b-button pill v-b-modal.modal variant="primary">
+                    <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
+                </b-button>
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col>
+                <b-table
+                  dense
+                  striped
+                  hover
+                  :items="items"
+                  :fields="fields"
+                  primary-key="id"
+                  small
+                  sticky-header
+                  head-variant="light"
+                  fixed
+                  responsive="sm"
+                  :busy="loading"
+                  :filter="filter"
+                  show-empty
+                >
+                  <template v-slot:cell(actions)="row">
+                    <b-button
+                      size="sm"
+                      @click="info(row.item, row.index, $event.target)"
+                      class="mr-1"
+                    >
+                    <b-icon>pencil</b-icon>
+                    </b-button>
+                    <b-button
+                      size="sm"
+                      @click="row.toggleDetails"
+                    >{{ row.detailsShowing ? 'Hide' : 'Show' }} Details</b-button>
+                  </template>
+                </b-table>
+            </b-col>
+        </b-row>
+    </b-container>
 </template>
 
 <script>

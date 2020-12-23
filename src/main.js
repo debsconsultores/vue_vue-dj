@@ -7,7 +7,9 @@ import Vuetify from 'vuetify'
 
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import BootstrapVue from "bootstrap-vue"
+import {BootstrapVue,BootstrapVueIcons} from "bootstrap-vue"
+import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
+
 import router from "./router"
 
 import store from "./store";
@@ -15,6 +17,7 @@ import store from "./store";
 Vue.use(Vuetify)
 Vue.use(BootstrapVue);
 Vue.use(VueSweetalert2);
+Vue.use(BootstrapVueIcons)
 
 Vue.config.productionTip = false
 

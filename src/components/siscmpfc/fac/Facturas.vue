@@ -29,7 +29,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <div v-if="opt==1">Clientes</div>
+          <Clientes  v-if="opt==1" />
           <div v-if="opt==2">Facturar</div>
         </v-col>
       </v-row>
@@ -37,10 +37,12 @@
 </template>
 
 <script>
+import Clientes from "./Clientes"
 
 export default {
   name: "Compras",
   components: {
+    Clientes
   },
   data() {
     return {
