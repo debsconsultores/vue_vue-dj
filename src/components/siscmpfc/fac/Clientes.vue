@@ -25,7 +25,7 @@
                 </b-form-group>
             </b-col>
             <b-col sm="4">
-                <b-button pill v-b-modal.modal variant="primary">
+                <b-button pill v-b-modal.modal variant="primary" @click="modalShow=True" >
                     <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
                 </b-button>
             </b-col>
@@ -62,6 +62,54 @@
                     >{{ row.detailsShowing ? 'Hide' : 'Show' }} Details</b-button>
                   </template>
                 </b-table>
+                <b-modal id="modal" v-model="modalShow" size="xl" title="Clientes" no-close-on-backdrop no-close-on-esc
+                hide-footer centered hide-header-close >
+                    <b-container fluid>
+                        <b-row class="my-1">
+                            <b-col sm="1">
+                            <label for="id">Id:</label>
+                            </b-col>
+                            <b-col sm="2">
+                            <b-form-input v-model="cliente.id" disabled type="text"></b-form-input>
+                            </b-col>
+                            <b-col sm="1">
+                            <label for="nombre">Nombre:</label>
+                            </b-col>
+                            <b-col>
+                            <b-form-input v-model="cliente.nombre" type="text" autofocus ></b-form-input>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm="1">
+                            <label for="telefono">Teléfono:</label>
+                            </b-col>
+                            <b-col>
+                            <b-form-input v-model="cliente.telefono" type="text"></b-form-input>
+                            </b-col>
+                            <b-col sm="1">
+                            <label for="email">E-Mail:</label>
+                            </b-col>
+                            <b-col>
+                            <b-form-input v-model="cliente.email" type="email"></b-form-input>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm="1">
+                            <b-form-checkbox v-model="cliente.estado" name="check-button" switch>
+                                Estado
+                            </b-form-checkbox>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                            <b-button class="mt-3" variant="outline-info" block @click="cerrar">Cancelar</b-button>
+                            </b-col>
+                            <b-col>
+                            <b-button class="mt-3" variant="outline-danger" block @click="guardar">Guardar</b-button>
+                            </b-col>
+                        </b-row>
+                    </b-container>
+                </b-modal>
             </b-col>
         </b-row>
     </b-container>
@@ -131,6 +179,9 @@ export default {
             } finally {
                 this.loading = false
             }
+        },
+        cerrar(){
+            this.modalShow = false
         }
     }
 }
