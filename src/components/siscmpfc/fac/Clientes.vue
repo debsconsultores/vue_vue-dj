@@ -1,6 +1,9 @@
 <template>
     <b-container>
         <b-row>
+            <b-col sm="2">
+                <h4>Clientes</h4>
+            </b-col>
             <b-col sm="8">
                 <b-form-group
                 label="Filtro"
@@ -24,7 +27,7 @@
                     </b-input-group>
                 </b-form-group>
             </b-col>
-            <b-col sm="4">
+            <b-col sm="2">
                 <b-button pill v-b-modal.modal variant="primary" @click="abrirModal" >
                     <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
                 </b-button>
@@ -50,6 +53,8 @@
                   :busy="loading"
                   :filter="filter"
                   show-empty
+                  emptyText = "No hay Datos"
+                  emptyFilteredText = "No se encontró ningún registro"
                 >
                   <template v-slot:cell(acciones)="row">
                     <!-- <b-button
