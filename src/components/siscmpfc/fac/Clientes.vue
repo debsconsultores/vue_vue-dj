@@ -25,8 +25,11 @@
                 </b-form-group>
             </b-col>
             <b-col sm="4">
-                <b-button pill v-b-modal.modal variant="primary" @click="modalShow=true" >
+                <b-button pill v-b-modal.modal variant="primary" @click="abrirModal" >
                     <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
+                </b-button>
+                <b-button pill variant="success" @click="iniciar">
+                    <b-icon icon="arrow-clockwise"></b-icon>
                 </b-button>
             </b-col>
         </b-row>
@@ -48,8 +51,8 @@
                   :filter="filter"
                   show-empty
                 >
-                  <template v-slot:cell(actions)="row">
-                    <b-button
+                  <template v-slot:cell(acciones)="row">
+                    <!-- <b-button
                       size="sm"
                       @click="info(row.item, row.index, $event.target)"
                       class="mr-1"
@@ -59,7 +62,8 @@
                     <b-button
                       size="sm"
                       @click="row.toggleDetails"
-                    >{{ row.detailsShowing ? 'Hide' : 'Show' }} Details</b-button>
+                    >{{ row.detailsShowing ? 'Hide' : 'Show' }} Details</b-button> -->
+                    <b-icon icon="pencil" size="sm" @click="editar(row.item)"></b-icon>
                   </template>
                 </b-table>
                 <b-modal id="modal" v-model="modalShow" size="xl" title="Clientes" no-close-on-backdrop no-close-on-esc
@@ -199,6 +203,20 @@ export default {
                 this.cerrar()
                 this.iniciar()
             }
+        },
+        editar(data){
+            this.cliente = data
+            this.modalShow = true
+        },
+        abrirModal(){
+            this.cliente = {
+                id:-1,
+                nombre:"",
+                telefono:"",
+                email:"",
+                estado:true
+            }
+            this.modalShow = true
         }
     }
 }
