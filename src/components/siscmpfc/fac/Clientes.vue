@@ -25,7 +25,7 @@
                 </b-form-group>
             </b-col>
             <b-col sm="4">
-                <b-button pill v-b-modal.modal variant="primary" @click="modalShow=True" >
+                <b-button pill v-b-modal.modal variant="primary" @click="modalShow=true" >
                     <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
                 </b-button>
             </b-col>
@@ -182,6 +182,23 @@ export default {
         },
         cerrar(){
             this.modalShow = false
+        },
+        async guardar(){
+            try {
+                const c = await this.api.saveCliente(this.cliente)
+                if (c.id!=undefined){
+                    this.msg("Guardado Satisfactoriamente")
+                    this.cliente = []
+                }else{
+                    this.msgError("Error Inesperado")
+                }
+            } catch (error) {
+                this.msgError(error)
+            }
+            finally{
+                this.cerrar()
+                this.iniciar()
+            }
         }
     }
 }
