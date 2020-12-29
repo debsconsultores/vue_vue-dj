@@ -64,6 +64,7 @@
                       @click="row.toggleDetails"
                     >{{ row.detailsShowing ? 'Hide' : 'Show' }} Details</b-button> -->
                     <b-icon icon="pencil" size="sm" @click="editar(row.item)"></b-icon>
+                    <b-icon icon="trash" size="sm" @click="borrar(row.item)"></b-icon>
                   </template>
                 </b-table>
                 <b-modal id="modal" v-model="modalShow" size="xl" title="Clientes" no-close-on-backdrop no-close-on-esc
@@ -122,12 +123,14 @@
 <script>
 import { ApiFac } from "./ApiFac";
 import { BIcon } from "bootstrap-vue";
+import mensajesMixin from "../../../mixins/mensajesMixin"
 
 export default {
     name:"Cliente",
 	components: {
         BIcon
     },
+    mixins: [mensajesMixin],
     data() {
         return {
             modalShow: false,
@@ -217,6 +220,21 @@ export default {
                 estado:true
             }
             this.modalShow = true
+        },
+        async borrar(item){
+            try {
+                if(await this.mensajeSiNo(`¿Borrar cliente ${item.nombre}?`)){
+                    this.loading = true
+                    await this.api.deleteCliente(item.id)
+                    this.msg("Cliente Borrado Satisfactoriamente")
+                }
+            } catch (error) {
+                this.msgError(error)
+            }
+            finally{
+                this.loading = false
+                this.iniciar()
+            }
         }
     }
 }

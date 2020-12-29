@@ -14,4 +14,8 @@ export class ApiFac extends Api{
     async saveCliente(obj){
         return await super.save(contexto,obj)
     }
+
+    async deleteCliente(id){
+        return await super.delete(contexto,id)
+    }
 }
