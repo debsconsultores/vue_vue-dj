@@ -1,8 +1,8 @@
 import Api from "../Api"
 
 const contexto = "cliente";
-const contextDet = "facturas-detalle"
-const contextEnc = "facturas"
+const contextoDet = "facturas-detalle"
+const contextoEnc = "facturas"
 
 export class ApiFac extends Api{
     constructor(){
