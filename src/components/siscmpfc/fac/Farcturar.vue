@@ -23,9 +23,13 @@
             <b-col sm="1">
                 <label for="cliente">Cliente:</label>
             </b-col>
+            <b-col sm="1">
+                <!-- <b-form-select v-model="encabezado.cliente" :options="clientes"
+                value-field="id" text-field="nombre" ></b-form-select> -->
+                <b-form-input v-model="encabezado.cliente.id" @blur="buscarCliente" :disabled="encabezado.id!=-1"></b-form-input>
+            </b-col>
             <b-col>
-                <b-form-select v-model="encabezado.cliente" :options="clientes"
-                value-field="id" text-field="nombre" ></b-form-select>
+                <b-form-input v-model="encabezado.cliente.nombre" disabled></b-form-input>
             </b-col>
         </b-row>
         <b-row>
@@ -136,6 +140,26 @@ export default {
             } catch (error) {
                 this.msgError(error)
             } finally {
+                this.loading = false
+            }
+        },
+        async buscarCliente(){
+            try {
+                this.loading = true
+                const c = await this.api.getCliente(this.encabezado.cliente.id)
+                // console.log(c)
+                if(c.detail != undefined){
+                    this.msgError(c.detail)
+                    this.encabezado.cliente = {}
+                }else if (!c.estado){
+                    this.msgError("Cliente Inactivo")
+                    this.encabezado.cliente = {}
+                }else{
+                    this.encabezado.cliente = c
+                }
+            } catch (error) {
+                this.msgError(error)
+            }finally{
                 this.loading = false
             }
         }
