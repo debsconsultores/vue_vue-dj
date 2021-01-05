@@ -1,5 +1,12 @@
 <template>
     <b-container fluid>
+        <b-overlay :show="loading" spinner-variant="primary" rounded="sm" >
+            <template v-slot:overlay>
+                <div class="text-center">
+                    <b-icon icon="stopwatch" font-scale="3" animation="cylon"></b-icon>
+                    <p id="cancel-label">Un Momento Por favor..</p>
+                </div>
+            </template>
         <b-row>
             <b-col sm="1">
                 <label for="id">No.:</label>
@@ -66,6 +73,7 @@
                 </b-card>
             </b-col>
         </b-row>
+        </b-overlay>
     </b-container>
 </template>
 
@@ -121,8 +129,15 @@ export default {
     },
     methods: {
         async iniciar() {
-            const c = await this.api.getCliente();
-            this.clientes = c;
+            try {
+                this.loading = true
+                const c = await this.api.getCliente();
+                this.clientes = c;    
+            } catch (error) {
+                this.msgError(error)
+            } finally {
+                this.loading = false
+            }
         }
     }
     
