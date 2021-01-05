@@ -1,5 +1,72 @@
 <template>
-    <div></div>
+    <b-container fluid>
+        <b-row>
+            <b-col sm="1">
+                <label for="id">No.:</label>
+            </b-col>
+            <b-col sm="2">
+                <b-form-input v-model="encabezado.id" :disabled="!editar" type="text"></b-form-input>
+            </b-col>
+            <b-col sm="1">
+                <label for="fecha">Fecha:</label>
+            </b-col>
+            <b-col sm="2">
+                <b-form-input v-model="encabezado.fecha" type="text" disabled></b-form-input>
+            </b-col>
+            <b-col sm="1">
+                <label for="cliente">Cliente:</label>
+            </b-col>
+            <b-col>
+                <b-form-select v-model="encabezado.cliente" :options="clientes"
+                value-field="id" text-field="nombre" ></b-form-select>
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col>
+                <b-card
+                title="Productos"
+                class="mb-2">
+                    <b-row>
+                        <b-col sm="1">
+                            <b-form-input v-model="detalle.producto" ></b-form-input>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-form-input v-model="detalle.descripcion" disabled=""></b-form-input>
+                        </b-col>
+                        <b-col sm="2">
+                            <b-form-input v-model="detalle.cantidad" type="number" min="1" value="1" ></b-form-input>
+                        </b-col>
+                        <b-col sm="2">
+                            <b-form-input v-model="detalle.precio" type="number" ></b-form-input>
+                        </b-col>
+                        <b-col sm="1"></b-col>
+                    </b-row>
+                </b-card>
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col>
+                <b-card title="Detalle" class="mb-2">
+                    <b-table
+                    dense stripped hover
+                    :items="items"
+                    :fields="fields"
+                    primary-key="id"
+                    small
+                    sticky-header
+                    head-variant="light"
+                    responsive="sm"
+                    :busy="loading"
+                    show-empty
+                    emptyText="No hay datos"
+                    emtpyFilterdText="No se encontró ningún registro"
+                    >
+
+                    </b-table>
+                </b-card>
+            </b-col>
+        </b-row>
+    </b-container>
 </template>
 
 <script>
