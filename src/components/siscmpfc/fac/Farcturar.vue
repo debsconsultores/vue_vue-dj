@@ -92,7 +92,7 @@
                 class="mb-2">
                     <b-row>
                         <b-col sm="1">
-                            <b-form-input v-model="detalle.producto" ></b-form-input>
+                            <b-form-input v-model="detalle.producto" @blur="buscarProducto" ></b-form-input>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input v-model="detalle.descripcion" disabled=""></b-form-input>
@@ -101,9 +101,13 @@
                             <b-form-input v-model="detalle.cantidad" type="number" min="1" value="1" ></b-form-input>
                         </b-col>
                         <b-col sm="2">
-                            <b-form-input v-model="detalle.precio" type="number" ></b-form-input>
+                            <b-form-input v-model="detalle.precio" type="number" disabled ></b-form-input>
                         </b-col>
-                        <b-col sm="1"></b-col>
+                        <b-col sm="1">
+                            <b-btn block variant="info" @click="save">
+                                <b-icon icon="cart-plus"></b-icon>
+                            </b-btn>
+                        </b-col>
                     </b-row>
                 </b-card>
             </b-col>
@@ -138,6 +142,7 @@
 import { ApiFac } from "./ApiFac";
 import { ApiInv } from "../inv/ApiInv";
 import mensajesMixin from "../../../mixins/mensajesMixin"
+import moment from "moment"
 
 export default {
   name: "Facturar",
@@ -159,7 +164,7 @@ export default {
           id: -1,
           nombre: ""
         },
-        fecha: new Date().toLocaleString(),
+        fecha: moment().format("DD/MM/YYYY"),
       },
       detalle: {
         id: -1,
@@ -253,7 +258,105 @@ export default {
           this.encabezado.cliente.id = item.id
           await this.buscarCliente()
           this.modalShow=false
+        },
+        async buscarProducto(){
+            if(this.detalle.producto>0){
+              try {
+                this.loading=true;
+                const p = await this.apiInv.getProductos(this.detalle.producto)
+                if(p.id!== undefined){
+                  if(p.existencia>0){
+                    this.detalle.producto = p.id
+                    this.detalle.descripcion = p.descripcion
+					this.detalle.precio = p.precio
+                  }else{
+                    this.msgError("NO Hay Existencia para facturar")
+                    this.detalle = {};
+                  }
+                }else{
+                  this.msgError(p.detail)
+                  this.detalle = {}
+                }
+              } catch (error) {
+                this.msgError(error)
+              } finally{
+                this.loading=false
+              }
+            }
+        },
+        async save(){
+            let fechaFact = this.encabezado.fecha
+            fechaFact = moment(fechaFact, 'DD/MM/YYYY').format('YYYY-MM-DD')
+
+            if(this.encabezado.cliente.id===undefined || this.encabezado.cliente.id===null || this.encabezado.cliente.nombre=="" || this.encabezado.cliente.id<1){
+                this.msgError("Cliente es Requerido")
+                return false
+            }
+
+            if(this.detalle.descripcion === undefined || this.detalle.descripcion===""){
+                this.msgError("Producto Requerido")
+                return false
+            }
+
+            if(this.detalle.cantidad===undefined || this.detalle.cantidad<=0){
+                this.msgError("Cantidad Requerida o valor incorrecto")
+                return false
+            }
+
+            try{
+                this.loading=true
+                const enc = {
+                    id: this.encabezado.id,
+                    cliente: this.encabezado.cliente.id,
+                    fecha: fechaFact
+                }
+
+                const f = await this.api.saveEncabezado(enc)
+                if(f.id===undefined){
+                    this.msgError(`Falló en Guardar Encabezado con: ${f}`)
+                }else{
+                    let id = f.id
+                    const det = {
+                        id: -1,
+                        cabecera : id,
+                        producto : this.detalle.producto,
+                        cantidad : this.detalle.cantidad,
+                        precio : this.detalle.precio,
+                        descuento: this.detalle.descuento
+                    }
+                    const d = await this.api.saveDetalle(det)
+                    if(d.id===undefined){
+                        this.msgError(`Fallo en Guardar Detalle con: ${d}`);
+                        this.encabezado.id = f.id
+                    }else{
+                        this.detalle = {id:-1}
+                        this.encabezado = f;
+                        this.encabezado.cliente = await this.api.getCliente(this.encabezado.cliente);
+                        this.encabezado.fecha = moment(f.fecha, 'YYYY-MM-DD').format('DD/MM/YYYY')
+                    }
+                }
+
+            }catch(error){
+                this.msgError(error)
+            }finally{
+                this.loading = false
+                this.refresh()
+            }
+        },
+        async refresh(){
+          try {
+            this.loading = true;
+            const r = await this.api.getFacturas(this.encabezado.id)
+            // this.encabezado = r;
+            this.items = r.detalle; 
+          } catch (error) {
+            this.msgError(`Error Refrescando con: ${error}`)
+          } finally {
+            this.loading = false;
+          }
+
         }
+
     }
     
 }
