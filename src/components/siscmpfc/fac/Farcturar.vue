@@ -1,5 +1,53 @@
 <template>
     <b-container fluid>
+        <b-modal id="modal" v-model="modalShow" size="lg" title="Clientes" no-close-on-backdrop no-close-on-esc
+        centered hide-header-close
+        header-bg-variant="success" ok-only ok-variant="info" ok-title="Salir">
+        <b-container fluid>
+            <b-row>
+                <b-col>
+                    <b-card title="Buscar">
+                        <b-row>
+                            <b-col sm="11">
+                                <b-form-input v-model="searchModal" type="text" autofocus @keypress.enter="buscarClientePorNombre" ></b-form-input>
+                            </b-col>
+                            <b-col sm="1">
+                                <b-button pill variant="success" size="sm" @click="buscarClientePorNombre">
+                                <b-icon-search></b-icon-search>
+                                </b-button>
+                            </b-col>
+                        </b-row> 
+                    </b-card>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <b-card title="Resultados">
+                        <b-overlay :show="loading" spinner-variant="primary" rounded="sm">
+                            <b-table
+                            dense
+                            striped
+                            hover
+                            :items="buscado"
+                            primary-key="id"
+                            small
+                            sticky-header
+                            head-variant="light"
+                            fixed
+                            responsive="sm"
+                            :busy="loading"
+                            show-empty
+                            emptyText	= "No hay Datos"
+                            emptyFilteredText = "No se encontró ningún registro"
+                            @row-clicked="(item) => clickBuscar(item)"
+                            >
+                            </b-table>
+                        </b-overlay>
+                    </b-card>
+                </b-col>
+            </b-row>
+        </b-container>
+        </b-modal>
         <b-overlay :show="loading" spinner-variant="primary" rounded="sm" >
             <template v-slot:overlay>
                 <div class="text-center">
@@ -30,6 +78,11 @@
             </b-col>
             <b-col>
                 <b-form-input v-model="encabezado.cliente.nombre" disabled></b-form-input>
+            </b-col>
+            <b-col sm="1">
+                <b-button @click="abrirModal" variant="success" :disabled="encabezado.id!=-1" >
+                <b-icon-people></b-icon-people>
+                </b-button>
             </b-col>
         </b-row>
         <b-row>
@@ -91,6 +144,9 @@ export default {
   mixins:[mensajesMixin],
   data() {
     return {
+      searchModal:"",
+      modalShow:false,
+      buscado:[],
       api: new ApiFac(),
       apiInv : new ApiInv(),
       editar: false,
@@ -162,6 +218,41 @@ export default {
             }finally{
                 this.loading = false
             }
+            // const d = await this.api.buscarClientePorNombre("gggg")
+            // console.log("--------------------")
+            // console.log(d)
+        },
+        abrirModal(){
+            this.buscado = []
+            this.searchModal = ""
+            this.modalShow=true
+        },
+        async buscarClientePorNombre(){
+          this.loading=true
+          this.buscados=[]
+          try {
+            console.log(this.searchModal)
+            if (this.searchModal!=""){
+              const d = await this.api.buscarClientePorNombre(this.searchModal)
+              console.log(d);
+              if (d.detail != undefined) {
+                this.msgError(d.detail);
+            } else {
+              this.buscado = d
+            }
+            }
+          } catch (error) {
+            this.msgError(error)
+          }
+          finally{
+            this.loading=false
+          }
+        },
+        async clickBuscar(item){
+          console.warn(item)
+          this.encabezado.cliente.id = item.id
+          await this.buscarCliente()
+          this.modalShow=false
         }
     }
     
