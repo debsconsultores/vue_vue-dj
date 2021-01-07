@@ -144,9 +144,29 @@
                     show-empty
                     emptyText="No hay datos"
                     emtpyFilterdText="No se encontró ningún registro"
+                    foot-clone
                     >
                         <template v-slot:cell(acciones)="row">
                             <b-icon icon="trash" size="sm" @click="borrar(row.item)" class="mr-1"></b-icon>
+                        </template>
+
+                        <template v-slot:foot()>
+                            <span></span>
+                        </template>
+                        <template v-slot:foot(producto_descripcion)>
+                            <span class="text-danger">Totales</span>
+                        </template>
+                        <template v-slot:foot(cantidad)>
+                            <span class="text-danger">{{totales.cantidad}}</span>
+                        </template>
+                        <template v-slot:foot(subtotal)>
+                            <span class="text-danger">{{totales.subtotal}}</span>
+                        </template>
+                        <template v-slot:foot(descuento)>
+                            <span class="text-danger">{{totales.descuento}}</span>
+                        </template>
+                        <template v-slot:foot(total)>
+                            <span class="text-danger">{{totales.total}}</span>
                         </template>
 
                     </b-table>
@@ -210,6 +230,26 @@ export default {
   },
     created(){
         this.iniciar();
+    },
+    computed:{
+          totales(){
+            let t = {
+              cantidad: 0,
+              subtotal: 0,
+              descuento: 0,
+              total: 0
+            };
+            if(this.items!=undefined)
+            {
+              this.items.reduce((i,obj)=>{
+                t.cantidad += obj.cantidad;
+                t.subtotal += obj.subtotal;
+                t.descuento += obj.descuento;
+                t.total += obj.total;
+              },0)
+            }
+            return t;
+          }
     },
     methods: {
         async iniciar() {
