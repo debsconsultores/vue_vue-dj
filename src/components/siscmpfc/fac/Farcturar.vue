@@ -63,7 +63,7 @@
                     <b-btn variant="danger" @click="buscar">
                         <b-icon icon="search"></b-icon>
                     </b-btn>
-                    <b-btn variant="warning">
+                    <b-btn variant="warning" @click="nueva">
                         <b-icon icon="basket3"></b-icon>
                     </b-btn>
                     </b-btn-toolbar>
@@ -214,6 +214,7 @@ export default {
                 this.loading = true
                 const c = await this.api.getCliente();
                 this.clientes = c;    
+                this.nueva()
             } catch (error) {
                 this.msgError(error)
             } finally {
@@ -366,15 +367,7 @@ export default {
             // this.encabezado = r;
             if (r.detail != undefined) {
               this.msgError(r.detail)
-              this.encabezado =  {
-                id: -1,
-                cliente: {
-                  id: -1,
-                  nombre: ""
-                },
-                fecha: moment().format("DD/MM/YYYY")
-              }
-              this.items = []
+              this.nueva()
             }else{
               this.encabezado = r;
               this.encabezado.cliente = await this.api.getCliente(this.encabezado.cliente);
@@ -420,6 +413,28 @@ export default {
         }else{
           this.$swal("Búsqueda Cancelada","","warning")
         }
+      },
+      async nueva() {
+        this.encabezado = {
+          id: -1,
+          cliente: {
+            id: -1,
+            nombre: ""
+          },
+          fecha: moment().format("DD/MM/YYYY")
+        }
+        this.detalle = {
+          id: -1,
+          cabecera: -1,
+          producto: -1,
+          cantidad: 0,
+          precio: 0,
+          subtotal: 0,
+          descuento: 0,
+          total: 0
+        };
+        this.editar = false
+        this.items = []
       }
 
     }
