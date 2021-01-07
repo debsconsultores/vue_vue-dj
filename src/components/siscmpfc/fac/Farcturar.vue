@@ -12,7 +12,7 @@
                                 <b-form-input v-model="searchModal" type="text" autofocus @keypress.enter="buscarClientePorNombre" ></b-form-input>
                             </b-col>
                             <b-col sm="1">
-                                <b-button pill variant="success" size="sm" @click="buscarClientePorNombre">
+                                <b-button pill variant="success" size="sm" @click="buscarClientePorNombre" :disabled="encabezado.id!=-1">
                                 <b-icon-search></b-icon-search>
                                 </b-button>
                             </b-col>
@@ -55,6 +55,22 @@
                     <p id="cancel-label">Un Momento Por favor..</p>
                 </div>
             </template>
+        <b-row>
+            <b-col>
+                <b-navbar toggleable="lg" variant="info" sticky>
+                <b-navbar-nav >
+                    <b-btn-toolbar>
+                    <b-btn variant="danger" @click="buscar">
+                        <b-icon icon="search"></b-icon>
+                    </b-btn>
+                    <b-btn variant="warning">
+                        <b-icon icon="basket3"></b-icon>
+                    </b-btn>
+                    </b-btn-toolbar>
+                </b-navbar-nav>
+                </b-navbar>
+            </b-col>
+        </b-row>
         <b-row>
             <b-col sm="1">
                 <label for="id">No.:</label>
@@ -348,14 +364,63 @@ export default {
             this.loading = true;
             const r = await this.api.getFacturas(this.encabezado.id)
             // this.encabezado = r;
-            this.items = r.detalle; 
+            if (r.detail != undefined) {
+              this.msgError(r.detail)
+              this.encabezado =  {
+                id: -1,
+                cliente: {
+                  id: -1,
+                  nombre: ""
+                },
+                fecha: moment().format("DD/MM/YYYY")
+              }
+              this.items = []
+            }else{
+              this.encabezado = r;
+              this.encabezado.cliente = await this.api.getCliente(this.encabezado.cliente);
+              this.encabezado.fecha = moment(r.fecha, 'YYYY-MM-DD').format('DD/MM/YYYY')
+              this.items = r.detalle; 
+            }
+
           } catch (error) {
             this.msgError(`Error Refrescando con: ${error}`)
           } finally {
             this.loading = false;
           }
 
+        },
+        async buscar() {
+          const { value: idEnc } = await this.$swal.fire({
+          title: 'Digite Número de Factura',
+          input: 'text',
+          allowOutsideClick: false,
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return 'Debe Digitar Id de Factura'
+            }
+          }
+        })
+
+        if (idEnc) {
+          this.encabezado.id = idEnc
+          await this.refresh()
+          if(this.encabezado.id===undefined){
+          this.encabezado =  {
+              id: -1,
+              cliente: {
+                id: -1,
+                nombre: ""
+              },
+              fecha: moment().format("DD/MM/YYYY")
+            }
+            this.$swal("Factura No Encontrada",idEnc,"error")
+          }
+
+        }else{
+          this.$swal("Búsqueda Cancelada","","warning")
         }
+      }
 
     }
     
