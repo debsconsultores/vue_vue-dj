@@ -145,6 +145,9 @@
                     emptyText="No hay datos"
                     emtpyFilterdText="No se encontró ningún registro"
                     >
+                        <template v-slot:cell(acciones)="row">
+                            <b-icon icon="trash" size="sm" @click="borrar(row.item)" class="mr-1"></b-icon>
+                        </template>
 
                     </b-table>
                 </b-card>
@@ -435,6 +438,12 @@ export default {
         };
         this.editar = false
         this.items = []
+      }, 
+      async borrar(item){
+          if(await this.mensajeSiNo(`${item.producto_descripcion}?`,"¿Borrar")){
+              await this.api.deleteDetalle(item.id)
+              this.refresh()
+          }
       }
 
     }
