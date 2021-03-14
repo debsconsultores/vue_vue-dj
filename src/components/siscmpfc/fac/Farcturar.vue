@@ -388,6 +388,7 @@ export default {
                     if(d.id===undefined){
                         this.msgError(`Fallo en Guardar Detalle con: ${d}`);
                         this.encabezado.id = f.id
+                        this.refresh()
                     }else{
                         this.detalle = {id:-1}
                         this.encabezado = f;
