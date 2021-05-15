@@ -2,7 +2,7 @@
     <b-container>
         <b-row>
             <b-col>
-                <h1>Bienvenidos al Curso de Vue + Django <small>x Daniel Bojorge</small></h1>
+                <h1>Bienvenidos al Curso de Vue + Django <small>x Daniel Bojorge</small>{{prueba}}</h1>
                 <img src="../assets/Logo-VueDJ.png" alt="" width="100%" height="auto" rounded="circle">
             </b-col>
         </b-row>
@@ -39,7 +39,8 @@ export default {
                     url:"https://youtube.com/DEBSDaniel03",
                     color:"danger"
                 }
-            ]
+            ],
+            prueba: this.$session.get("username")
         }
     }
     

@@ -64,6 +64,10 @@ export default {
       mostrarMenu:false,
       miniVariant:true
     }
+  },
+  mounted(){
+    this.$session.set("username","usuario123")
+    console.log(this.$session.get("username"))
   }
 }
 </script>
