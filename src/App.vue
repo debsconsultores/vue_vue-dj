@@ -66,8 +66,8 @@ export default {
     }
   },
   mounted(){
-    this.$session.set("username","usuario123")
-    console.log(this.$session.get("username"))
+    // localStorage.usuario = "nuevo usuario"
+    console.log(localStorage.usuario)
   }
 }
 </script>
