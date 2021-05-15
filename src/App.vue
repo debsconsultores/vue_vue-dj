@@ -67,20 +67,24 @@ export default {
       ],
       mostrarMenu:false,
       miniVariant:true,
-      usuario:localStorage.getItem("usuario")
+      usuario:""
     }
   },
   mounted(){
-    localStorage.setItem("usuario","Nuevo Usuario")
+    // localStorage.setItem("usuario","Nuevo Usuario")
+    this.$root.$on('login',(user)=> this.login(user))
     console.log(localStorage.getItem("usuario"))
   },
   methods:{
     logout(){
       localStorage.removeItem("usuario")
       this.usuario = ""
-      this.$router.push("/")
+      this.$router.push("/login")
+    },
+    login(user){
+      this.usuario = user
     }
-  }
+  },
 }
 </script>
 
