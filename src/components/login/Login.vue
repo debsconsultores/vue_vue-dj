@@ -31,19 +31,22 @@
 </template>
 
 <script>
+import {ApiAuth} from "./ApiAuth"
+
 export default {
     name:"Login",
     data(){
         return{
             username:"",
-            password:""
+            password:"",
+            api: new ApiAuth()
         }
     },
     mounted(){
         this.$refs.username.focus()
     },
     methods:{
-        login(){
+        async login(){
             let username = this.username
             let pass = this.password
 
@@ -55,9 +58,27 @@ export default {
                 this.$swal("Requerido","Password Requerido o debe ser mayor a tres dígitos","warning")
                 return
             }
-            localStorage.setItem("username",username)
-            this.$router.push("/")
-            this.$root.$emit("login",username)
+
+            let token = await this.api.login(username,pass)
+            console.log(token)
+            
+            if('access' in token){
+                localStorage.setItem("access",token.access)
+                localStorage.setItem("refresh",token.refresh)
+
+                this.$router.push("/")
+                this.$root.$emit("login",username)
+            }else if('detail' in token){
+                this.msgError(token.detail)
+            }else if('error' in token){
+                this.msgError(token.error)
+            }else{
+                this.msgError("Error Inesperado")
+            }
+
+            // localStorage.setItem("username",username)
+            // this.$router.push("/")
+            // this.$root.$emit("login",username)
         }
     }
     
