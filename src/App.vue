@@ -3,6 +3,10 @@
     <v-system-bar>
       <v-app-bar-nav-icon @click.stop="mostrarMenu=!mostrarMenu">
       </v-app-bar-nav-icon>
+      <v-spacer></v-spacer>
+      <v-icon>perm_identity</v-icon>{{usuario}}
+      <div class="mx-1"></div>
+      <v-icon @click="logout">logout</v-icon>
     </v-system-bar>
     <v-navigation-drawer 
     v-model="mostrarMenu"
@@ -62,12 +66,20 @@ export default {
         {ruta:"/siscmpfc",nombre:"SysCmpFc",icono:"storefront"},
       ],
       mostrarMenu:false,
-      miniVariant:true
+      miniVariant:true,
+      usuario:localStorage.getItem("usuario")
     }
   },
   mounted(){
-    // localStorage.usuario = "nuevo usuario"
-    console.log(localStorage.usuario)
+    localStorage.setItem("usuario","Nuevo Usuario")
+    console.log(localStorage.getItem("usuario"))
+  },
+  methods:{
+    logout(){
+      localStorage.removeItem("usuario")
+      this.usuario = ""
+      this.$router.push("/")
+    }
   }
 }
 </script>

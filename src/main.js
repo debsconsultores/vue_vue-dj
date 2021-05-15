@@ -9,7 +9,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import {BootstrapVue,BootstrapVueIcons} from "bootstrap-vue"
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
-import VueSessionStorage from "vue-sessionstorage";
 
 import router from "./router"
 
@@ -19,7 +18,6 @@ Vue.use(Vuetify)
 Vue.use(BootstrapVue);
 Vue.use(VueSweetalert2);
 Vue.use(BootstrapVueIcons)
-Vue.use(VueSessionStorage)
 
 Vue.config.productionTip = false
 
