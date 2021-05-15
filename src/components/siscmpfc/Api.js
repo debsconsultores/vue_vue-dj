@@ -1,3 +1,6 @@
+import {ApiAuth} from "../login/ApiAuth"
+const apiAuth=new ApiAuth()
+
 export default class Api{
     constructor(){
         this.SERVER_URL = 'http://127.0.0.1:8000/rest/v1/'
@@ -8,17 +11,19 @@ export default class Api{
     }
 
     async getToken(){
-        const r = await fetch(this.TOKEN_URL,
-          {
-            method:"POST",
-            body:JSON.stringify(this.credenciales),
-            mode:"cors",
-            headers:{
-              'Content-Type': 'application/json'
-            }
-          }
-        )
-        const token = await r.json()
+        // const r = await fetch(this.TOKEN_URL,
+        //   {
+        //     method:"POST",
+        //     body:JSON.stringify(this.credenciales),
+        //     mode:"cors",
+        //     headers:{
+        //       'Content-Type': 'application/json'
+        //     }
+        //   }
+        // )
+        // const token = await r.json()
+        const token = apiAuth.getToken()
+        console.log(token,"guardado")
         return token;
       }
 

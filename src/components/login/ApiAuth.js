@@ -26,4 +26,10 @@ export class ApiAuth{
         }
         return token;
     }
+    getToken(){
+        const ACCESS = localStorage.getItem("access")
+        const REFRESH = localStorage.getItem("refresh")
+        const token = {access:ACCESS,refresh:REFRESH}
+        return token
+    }
 }
