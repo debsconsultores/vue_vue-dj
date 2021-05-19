@@ -22,7 +22,7 @@ export default class Api{
         //   }
         // )
         // const token = await r.json()
-        const token = apiAuth.getToken()
+        const token = await apiAuth.getToken()
         console.log(token,"guardado")
         return token;
       }
